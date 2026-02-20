@@ -201,13 +201,23 @@
 
                     ${car.sold ? 
                         '<button class="btn btn-primary" style="opacity: 0.6; cursor: not-allowed;">Vehicle Sold</button>' : 
-                        '<button class="btn btn-primary" onclick="alert(\'Inquiry Sent!\')">Request Information</button>'
+                        '<button class="btn btn-primary" onclick="inquireOnWhatsApp()">Request Information</button>'
                     }
                     <button class="btn btn-outline" onclick="window.location.href='inventory.html'">Back to Inventory</button>
                 </div>
             `;
         } else {
             container.innerHTML = `<h2>Car not found. <a href="index.html" style="color:var(--primary)">Return Home</a></h2>`;
+        }
+
+        function inquireOnWhatsApp() {
+            if (cars && cars[id]) {
+                const car = cars[id];
+                const phoneNumber = "254799219777";
+                const message = `Hi, is the ${car.year} ${car.name} available?`;
+                const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+            }
         }
 
         function openModal() {

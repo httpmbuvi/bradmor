@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Arrivals | Brandon Motors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #D32F2F; --dark: #f4f6f8; --light: #111111; --silver: #555555; --font-heading: 'Michroma', sans-serif; --font-body: 'Montserrat', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: linear-gradient(135deg, #050505, #0a0a2a); color: #fff; font-family: var(--font-body); overflow-x: hidden; }
+        
+        /* Force Dark Mode styles for this premium page */
+        body { --dark: #0f0f0f; --light: #f4f4f4; --silver: #C0C0C0; }
+        body.dark-mode nav { background: #000; border-bottom: 1px solid #222; }
+        body.dark-mode footer { background: #000; border-top: 1px solid #222; }
+
+        nav { padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: #fff; border-bottom: 1px solid #ddd; }
+        .logo { font-family: var(--font-heading); font-size: 1.5rem; color: var(--light); text-decoration: none; }
+        .nav-links a { color: var(--light); text-decoration: none; margin-left: 20px; text-transform: uppercase; font-size: 0.8rem; }
+
+        /* HERO SECTION */
+        .new-arrivals-hero {
+            height: 95vh;
+            background: linear-gradient(135deg, #ffffff 0%, #eef2f3 50%, #dbe6f6 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #333;
+            margin-bottom: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-bg-blur {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1562141961-b5d1855d7f31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover;
+            filter: blur(8px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px 60px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .new-arrivals-hero h1 { 
+            font-size: 3.5rem; 
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: #0a192f;
+            margin-bottom: 15px; 
+            opacity: 0; 
+            transform: translateY(30px);
+            background: linear-gradient(to right, #0a192f 20%, #4facfe 50%, #0a192f 80%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 4s linear infinite;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        @keyframes shineText { to { background-position: 200% center; } }
+
+        .new-arrivals-hero p { font-family: 'Poppins', sans-serif; font-size: 1.3rem; color: #555; opacity: 0; transform: translateY(30px); max-width: 600px; margin: 0 auto; font-weight: 400; }
+        
+        .hero-main-car {
+            width: 600px;
+            max-width: 90%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            animation: floatCarMain 5s ease-in-out infinite;
+            z-index: 3;
+            margin-top: 20px;
+        }
+        @keyframes floatCarMain {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* GRID LAYOUT */
+        .arrivals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            padding: 0 50px 100px 50px;
+        }
+
+        /* CARD STYLING */
+        .deal-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.4s ease;
+            opacity: 0; /* Hidden initially for GSAP */
+            transform: translateY(50px);
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .deal-card:hover { transform: translateY(-15px) scale(1.02); box-shadow: 0 20px 40px rgba(79, 172, 254, 0.2); border-color: #4facfe; }
+        
+        .img-wrapper { position: relative; overflow: hidden; height: 250px; }
+        .deal-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .deal-card:hover img { transform: scale(1.1); }
+        
+        /* Shine Effect */
+        .img-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 100%);
+            transform: skewX(-25deg);
+            transition: none;
+        }
+        .deal-card:hover .img-wrapper::after {
+            animation: shine 1s;
+        }
+        @keyframes shine {
+            100% { left: 150%; }
+        }
+        
+        .deal-card .info { padding: 25px; position: relative; z-index: 2; background: inherit; }
+        .deal-card h3 { font-family: var(--font-heading); font-size: 1.3rem; margin-bottom: 10px; }
+        .deal-card .price { color: #00e676; font-weight: 800; font-size: 1.4rem; margin-bottom: 15px; display: block; text-shadow: 0 0 10px rgba(0, 230, 118, 0.4); }
+        .deal-card .specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; color: #ccc; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; margin-top: 15px; }
+        .deal-card .specs span i { color: #4facfe; margin-right: 5px; }
+
+        .new-badge {
+            position: absolute; top: 15px; right: 15px;
+            background: var(--primary); color: #fff;
+            padding: 5px 15px; border-radius: 20px;
+            font-weight: bold; font-size: 0.7rem; text-transform: uppercase;
+            z-index: 10; 
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+        
+        .btn { padding: 12px 20px; border: none; text-transform: uppercase; font-weight: 700; cursor: pointer; font-family: var(--font-body); border-radius: 5px; transition: 0.3s; width: 100%; margin-top: 10px; }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: #b71c1c; transform: translateY(-2px); }
+        .btn-secondary { background: transparent; border: 1px solid #fff; color: #fff; }
+        .btn-secondary:hover { background: #fff; color: #000; transform: translateY(-2px); }
+
+        /* HERO BUTTONS */
+        .hero-btn-group { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
+        .btn-bright {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #fff; padding: 15px 40px; border-radius: 50px;
+            font-family: 'Poppins', sans-serif; font-weight: 600; border: none;
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3); transition: all 0.3s ease;
+            text-transform: uppercase; cursor: pointer; text-decoration: none;
+        }
+        .btn-bright:hover { transform: scale(1.05); box-shadow: 0 15px 30px rgba(79, 172, 254, 0.5); }
+        
+        .btn-outline-light {
+            background: #fff; color: #4facfe; border: 2px solid #4facfe;
+            padding: 15px 40px; border-radius: 50px;
+            font-family: 'Poppins', sans-serif; font-weight: 600;
+            transition: all 0.3s ease; text-transform: uppercase; cursor: pointer; text-decoration: none;
+        }
+        .btn-outline-light:hover { background: #4facfe; color: #fff; transform: scale(1.05); }
+
+        /* WAVE & ARROW */
+        .scroll-down-arrow {
+            position: absolute; bottom: 120px; left: 50%; transform: translateX(-50%);
+            color: #0a192f; font-size: 2rem; animation: bounceArrow 2s infinite; z-index: 5; cursor: pointer;
+        }
+        @keyframes bounceArrow {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        .custom-shape-divider-bottom {
+            position: absolute; bottom: 0; left: 0; width: 100%; overflow: hidden; line-height: 0; transform: rotate(180deg);
+        }
+        .custom-shape-divider-bottom svg { position: relative; display: block; width: calc(100% + 1.3px); height: 100px; }
+        .custom-shape-divider-bottom .shape-fill { fill: #050505; } /* Matches body bg */
+
+        /* STATS & COUNTDOWN */
+        .stats-bar { display: flex; justify-content: space-around; flex-wrap: wrap; padding: 40px; background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); margin-bottom: 50px; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .stat-box { text-align: center; margin: 10px; }
+        .stat-box h3 { font-size: 2.5rem; color: #4facfe; margin-bottom: 5px; font-family: var(--font-heading); }
+        .stat-box p { color: #ccc; text-transform: uppercase; letter-spacing: 1px; font-size: 0.9rem; }
+
+        .countdown-section { text-align: center; padding: 20px; background: linear-gradient(45deg, #D32F2F, #ff6b6b); margin: -30px 50px 50px 50px; border-radius: 10px; display: flex; justify-content: center; align-items: center; gap: 20px; position: relative; z-index: 10; box-shadow: 0 10px 30px rgba(211, 47, 47, 0.4); flex-wrap: wrap; }
+        .timer-box { font-size: 1.5rem; font-weight: bold; background: rgba(0,0,0,0.2); padding: 10px 20px; border-radius: 5px; }
+
+        /* CTA DREAM */
+        .cta-dream { text-align: center; padding: 100px 20px; background: url('https://images.unsplash.com/photo-1493238792000-8113da705763?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover fixed; position: relative; margin-top: 50px; }
+        .cta-dream::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); }
+        .cta-content { position: relative; z-index: 1; }
+        .cta-content h2 { font-family: var(--font-heading); font-size: 3rem; margin-bottom: 20px; }
+        .glow-btn { background: transparent; border: 2px solid #4facfe; color: #4facfe; padding: 15px 40px; font-size: 1.2rem; text-transform: uppercase; box-shadow: 0 0 10px #4facfe; transition: 0.3s; text-decoration: none; display: inline-block; font-weight: bold; }
+        .glow-btn:hover { background: #4facfe; color: #fff; box-shadow: 0 0 20px #4facfe, 0 0 40px #4facfe; }
+
+        /* REVIEWS */
+        .reviews-slider { overflow: hidden; padding: 50px; background: #050505; }
+        .review-track { display: flex; gap: 30px; animation: scrollReviews 30s linear infinite; }
+        .review-card { min-width: 300px; background: #111; padding: 20px; border-radius: 10px; border-left: 3px solid #4facfe; }
+        @keyframes scrollReviews { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+
+        footer { background: #f9f9f9; padding: 50px; border-top: 1px solid #ddd; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; }
+        .social-icons a { color: var(--light); margin-right: 15px; font-size: 1.2rem; transition: transform 0.3s; display: inline-block; }
+        .social-icons a:hover { transform: translateY(-5px); color: var(--primary); }
+
+        .assistant-btn {
+            position: fixed; bottom: 30px; right: 30px;
+            background: var(--primary); color: #fff;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000; transition: transform 0.3s ease;
+            text-decoration: none;
+        }
+        .assistant-btn:hover { transform: scale(1.1); }
+
+        .modal-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1; visibility: visible;
+        }
+        .modal-content {
+            background: var(--dark);
+            color: var(--light);
+            padding: 40px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.4s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        body:not(.dark-mode) .modal-content { background: #fff; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.8rem; color: var(--light); cursor: pointer; }
+        .modal-content h2 { font-family: var(--font-heading); color: var(--primary); margin-bottom: 20px; }
+        .chat-box { margin-bottom: 30px; line-height: 1.7; }
+        .chat-box ul { list-style-position: inside; padding-left: 10px; margin: 15px 0; }
+        .chat-box li { margin-bottom: 8px; }
+        .whatsapp-modal-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            background-color: #25D366; color: white;
+            padding: 15px 30px; border-radius: 5px;
+            text-decoration: none; font-weight: bold;
+            width: 100%;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+        .whatsapp-modal-btn:hover {
+            background-color: #128C7E;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Brandon Motors</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="inventory.html">Inventory</a>
+            <a href="new-arrivals.html">New Arrivals</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html" style="color: var(--primary);">Admin</a>
+            <i class="fas fa-sun" id="themeToggle" style="cursor: pointer; margin-left: 20px; color: var(--light);"></i>
+        </div>
+    </nav>
+
+    <header class="new-arrivals-hero">
+        <div class="hero-bg-blur"></div>
+        <div class="hero-content-wrapper">
+            <div class="glass-card">
+                <h1>New Arrivals – Fresh Deals Just Landed 🚗</h1>
+                <p>Drive home excellence today.</p>
+                <div class="hero-btn-group">
+                    <a href="#arrivalsGrid" class="btn-bright">Explore Now</a>
+                    <a href="contact.html" class="btn-outline-light">Contact Us</a>
+                </div>
+            </div>
+            <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Luxury Car" class="hero-main-car">
+        </div>
+        <div class="scroll-down-arrow" onclick="document.getElementById('arrivalsGrid').scrollIntoView({behavior: 'smooth'})">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="custom-shape-divider-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </header>
+
+    <div class="countdown-section">
+        <span style="font-size: 1.2rem; font-weight: bold;">LIMITED TIME OFFERS END IN:</span>
+        <div class="timer-box" id="countdown">00:00:00</div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat-box">
+            <h3 data-target="500">0</h3>
+            <p>Cars Sold</p>
+        </div>
+        <div class="stat-box">
+            <h3 data-target="100">0</h3>
+            <p>% Verified</p>
+        </div>
+        <div class="stat-box">
+            <h3>24/7</h3>
+            <p>Support</p>
+        </div>
+    </div>
+
+    <div class="filter-container" style="text-align: center; margin-bottom: 30px;">
+        <label for="sortFilter" style="margin-right: 10px; font-family: var(--font-body); color: #ccc;">Sort By:</label>
+        <select id="sortFilter" onchange="sortAndRender(this.value)" style="padding: 10px; border-radius: 5px; border: 1px solid #4facfe; background: rgba(0,0,0,0.5); color: #fff; font-family: var(--font-body);">
+            <option value="newest_arrival">Newest Arrival</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="year_desc">Year: Newest</option>
+            <option value="year_asc">Year: Oldest</option>
+        </select>
+    </div>
+
+    <section class="arrivals-grid" id="arrivalsGrid">
+        <!-- Dynamic Content -->
+    </section>
+
+    <section class="reviews-slider">
+        <h2 class="section-title" style="margin-bottom: 30px;">What People Are Saying</h2>
+        <div class="review-track">
+            <div class="review-card"><p>"Absolutely stunning collection!"</p><small>- Alex P.</small></div>
+            <div class="review-card"><p>"Best prices for luxury cars."</p><small>- Sarah M.</small></div>
+            <div class="review-card"><p>"Smooth process and great support."</p><small>- John D.</small></div>
+            <div class="review-card"><p>"Love my new Phantom!"</p><small>- Emily R.</small></div>
+            <div class="review-card"><p>"Highly recommended dealership."</p><small>- Michael B.</small></div>
+            <!-- Duplicate for scroll -->
+            <div class="review-card"><p>"Absolutely stunning collection!"</p><small>- Alex P.</small></div>
+            <div class="review-card"><p>"Best prices for luxury cars."</p><small>- Sarah M.</small></div>
+        </div>
+    </section>
+
+    <section class="cta-dream">
+        <div class="cta-content">
+            <h2>Your Dream Car Is Waiting.</h2>
+            <a href="inventory.html" class="glow-btn">Browse All Cars</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Brandon Motors. All rights reserved.</p>
+    </footer>
+
+    <div id="assistantModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2>Brandon Motors Assistant</h2>
+            <div class="chat-box">
+                <p>Hello! How can I assist you today?</p>
+                <p>We specialize in a wide range of vehicles to match your lifestyle:</p>
+                <ul>
+                    <li><strong>Luxury Sedans:</strong> For ultimate comfort and style.</li>
+                    <li><strong>Performance Coupes:</strong> For the thrill-seekers.</li>
+                    <li><strong>Versatile SUVs:</strong> For family adventures and off-road capability.</li>
+                    <li><strong>Exotic Supercars:</strong> For an unparalleled driving experience.</li>
+                </ul>
+                <p>Click below to chat with a specialist on WhatsApp for personalized recommendations.</p>
+            </div>
+            <a href="https://wa.me/254799219777" target="_blank" class="whatsapp-modal-btn">
+                <i class="fab fa-whatsapp"></i> Chat Now
+            </a>
+        </div>
+    </div>
+
+    <button onclick="openModal()" class="assistant-btn" title="Chat with Assistant">
+        <i class="fas fa-comment-dots"></i>
+    </button>
+
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+            toggleBtn.classList.replace('fa-sun', 'fa-moon');
+        }
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            toggleBtn.classList.replace(isDark ? 'fa-sun' : 'fa-moon', isDark ? 'fa-moon' : 'fa-sun');
+        });
+
+        // GSAP Animations for Hero
+        gsap.to(".new-arrivals-hero h1", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.2 });
+        gsap.to(".new-arrivals-hero p", { opacity: 1, y: 0, duration: 1, ease: "power3.out", delay: 0.4 });
+
+        const allCars = JSON.parse(localStorage.getItem('hemMotorsCars')) || [];
+        // Filter to show only cars marked as New Arrival. If none are marked, fallback to all.
+        const flaggedCars = allCars.filter(car => car.isNewArrival);
+        const cars = flaggedCars.length > 0 ? flaggedCars : allCars;
+        const grid = document.getElementById('arrivalsGrid');
+        
+        function sortAndRender(sortType) {
+            if (cars.length === 0) {
+                grid.innerHTML = '<p style="text-align:center; width:100%; font-size: 1.2rem; color: var(--silver);">No new arrivals at the moment.</p>';
+                return;
+            }
+
+            // Create a copy to sort, preserving original objects
+            let sortedCars = [...cars];
+
+            // Helper to clean price string to number
+            const getPrice = (p) => parseInt(p.replace(/[^0-9]/g, '')) || 0;
+
+            switch (sortType) {
+                case 'price_asc':
+                    sortedCars.sort((a, b) => getPrice(a.price) - getPrice(b.price));
+                    break;
+                case 'price_desc':
+                    sortedCars.sort((a, b) => getPrice(b.price) - getPrice(a.price));
+                    break;
+                case 'year_desc':
+                    sortedCars.sort((a, b) => b.year - a.year);
+                    break;
+                case 'year_asc':
+                    sortedCars.sort((a, b) => a.year - b.year);
+                    break;
+                case 'newest_arrival':
+                default:
+                    sortedCars.reverse(); // Default is newest added (end of array) first
+                    break;
+            }
+
+            grid.innerHTML = sortedCars.map((car) => {
+                // Find original index in the main 'cars' array to ensure links work correctly
+                const originalIndex = allCars.indexOf(car);
+                return `
+                <div class="deal-card" onclick="window.location.href='details.html?id=${originalIndex}'" style="cursor: pointer;">
+                    <div class="new-badge">New Arrival</div>
+                    <div class="img-wrapper">
+                        <img src="${car.imageUrl}" alt="${car.name}">
+                    </div>
+                    <div class="info">
+                        <h3>${car.name}</h3>
+                        <span class="price">${car.price}</span>
+                        <div class="specs">
+                            <span><i class="fas fa-calendar"></i> ${car.year}</span>
+                            <span><i class="fas fa-tachometer-alt"></i> ${car.mileage}</span>
+                            <span><i class="fas fa-gas-pump"></i> ${car.fuelType}</span>
+                            <span><i class="fas fa-cogs"></i> Auto</span>
+                        </div>
+                        <button class="btn btn-primary">View Details</button>
+                        <button class="btn btn-secondary" onclick="event.stopPropagation(); window.location.href='contact.html'">Book Test Drive</button>
+                    </div>
+                </div>
+            `}).join('');
+
+            // Re-trigger animations
+            gsap.fromTo(".deal-card", 
+                { opacity: 0, y: 50 },
+                { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power2.out", overwrite: true }
+            );
+        }
+
+        // Initial render
+        sortAndRender('newest_arrival');
+
+        // Countdown Timer
+        const countDownDate = new Date().getTime() + (24 * 60 * 60 * 1000); // 24 hours from now
+        setInterval(function() {
+            const now = new Date().getTime();
+            const distance = countDownDate - now;
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById("countdown").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        }, 1000);
+
+        // Stats Animation
+        const stats = document.querySelectorAll('.stat-box h3');
+        stats.forEach(stat => {
+            const target = +stat.getAttribute('data-target');
+            if (!target) return; // Skip non-numeric
+            const inc = target / 100;
+            let count = 0;
+            const updateCount = () => {
+                count += inc;
+                if (count < target) {
+                    stat.innerText = Math.ceil(count) + "+";
+                    setTimeout(updateCount, 20);
+                } else {
+                    stat.innerText = target + "+";
+                }
+            };
+            updateCount();
+        });
+
+        function openModal() {
+            document.getElementById('assistantModal').classList.add('active');
+        }
+        function closeModal() {
+            document.getElementById('assistantModal').classList.remove('active');
+        }
+        // Close modal on outside click
+        document.getElementById('assistantModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
